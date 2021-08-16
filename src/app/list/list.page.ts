@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ContactsService } from '../services/contacts.service';
-
+import { AlertController } from '@ionic/angular';
 export class Contacts {
   $key: string;
   name: string;
@@ -19,7 +19,7 @@ export class ListPage implements OnInit {
 
   List : Contacts[];
 
-  constructor(private contactService: ContactsService, private router: Router) { }
+  constructor(private contactService: ContactsService, private router: Router, public alertController: AlertController) { }
 
   ngOnInit() {
     this.contactService.getContacts().subscribe((res) => {
@@ -32,15 +32,32 @@ export class ListPage implements OnInit {
     });
   }
 
-
   editContact(id){
     this.router.navigate(['/update-contact', id]);
   }
 
-  remove(id) {
-    console.log(id)
-    if (window.confirm('Are you sure?')) {
-      this.contactService.delete(id)
-    }
-  }  
+  async remove(id) {
+    const alert = await this.alertController.create({
+      header: 'Delete Contact',
+      message: 'Are you sure?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Cancel');
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            this.contactService.delete(id)
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }

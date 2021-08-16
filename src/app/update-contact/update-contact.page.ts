@@ -33,16 +33,24 @@ export class UpdateContactPage implements OnInit {
 
   ngOnInit() {
     this.editForm = this.formBuilder.group({
-      name: ['',[Validators.required, Validators.minLength(5)]],
+      name: ['',[Validators.required, Validators.minLength(3)]],
       email : ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
       mobile: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],        
-      notes: ['',[Validators.required, Validators.minLength(20)]],
+      notes: ['',[Validators.required]],
     })
   }
 
+  get errorControl() {
+    return this.editForm.controls;
+  }
+
   onSubmit() {
+    this.isSubmitted = true;
+    if (!this.editForm.valid) {
+      return false;
+    } else {
     this.contactService.update(this.id, this.editForm.value);
     this.router.navigate(['/list']);
   }
-
+  }
 }
