@@ -8,8 +8,20 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'list',
     pathMatch: 'full'
+  },
+  {
+    path: 'list',
+    loadChildren: () => import('./list/list.module').then( m => m.ListPageModule)
+  },
+  {
+    path: 'add-contact',
+    loadChildren: () => import('./add-contact/add-contact.module').then( m => m.AddContactPageModule)
+  },
+  {
+    path: 'update-contact/:id',
+    loadChildren: () => import('./update-contact/update-contact.module').then( m => m.UpdateContactPageModule)
   },
 ];
 
